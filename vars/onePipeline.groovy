@@ -3,19 +3,17 @@ def call() {
     agent any
     tools {
         jdk 'jdk8'
+        
     }
     environment{
         server = null
         rtMaven = null
         buildInfo = null
+        scannerHome = tool 'sonar-scanner'
     }
     stages {
         stage ('Initialize') {
             steps {
-                sh '''
-                    echo "PATH = ${PATH}"
-                    echo "M2_HOME = ${M2_HOME}"
-                '''
                 script{
                     server = Artifactory.newServer url: 'http://localhost:8081/artifactory', username: 'admin', password: 'admin'
                     rtMaven = Artifactory.newMavenBuild()
@@ -41,6 +39,14 @@ def call() {
             post {
                 success {
                     junit 'target/surefire-reports/**/*.xml' 
+                }
+            }
+        }
+      stage ('Sonar Analysis') {
+            steps {
+                
+                withSonarQubeEnv('local-sonarqube') {
+                    sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
         }
