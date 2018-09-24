@@ -42,14 +42,7 @@ def call() {
                 }
             }
         }
-      stage ('Sonar Analysis') {
-            steps {
-                
-                withSonarQubeEnv('local-sonarqube') {
-                    sh "${scannerHome}/bin/sonar-scanner"
-                }
-            }
-        }
+      
         stage('Publish'){
             steps{
                 script{
