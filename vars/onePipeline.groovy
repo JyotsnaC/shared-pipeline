@@ -28,6 +28,11 @@ def call() {
             }
             
         }
+        stage('NewStage'){
+            steps{
+                sh 'echo "New Stage"'
+            }
+        }
 
         stage ('Build') {
             steps {
